@@ -303,120 +303,118 @@ export default function App() {
 
       <Modalize
         ref={modalizeRef}
-        snapPoint={380}>
+        keyboardAvoidingBehavior='height'
+        snapPoint={150}
+        >
 
-        <KeyboardAvoidingView>
-          <View style={styles.timercontainer} >
+          <KeyboardAvoidingView behavior='padding'>
 
-            <View style={styles.btnContainer}>
+          <View style={styles.btnContainer}>
 
-              <TouchableOpacity onPress={upDias}>
-                <FontAwesome name='angle-up' size={25} color='black' />
-              </TouchableOpacity>
+            <TouchableOpacity onPress={upDias}>
+              <FontAwesome name='angle-up' size={25} color='black' />
+            </TouchableOpacity>
 
-              <TouchableOpacity onPress={upHoras}>
-                <FontAwesome name='angle-up' size={25} color='black' />
-              </TouchableOpacity>
+            <TouchableOpacity onPress={upHoras}>
+              <FontAwesome name='angle-up' size={25} color='black' />
+            </TouchableOpacity>
 
-              <TouchableOpacity onPress={upMinutos}>
-                <FontAwesome name='angle-up' size={25} color='black' />
-              </TouchableOpacity>
+            <TouchableOpacity onPress={upMinutos}>
+              <FontAwesome name='angle-up' size={25} color='black' />
+            </TouchableOpacity>
 
-              <TouchableOpacity onPress={upSegundos}>
-                <FontAwesome name='angle-up' size={25} color='black' />
-              </TouchableOpacity>
-
-            </View>
-
-
-
-            <View style={styles.timerTime}>
-
-              <TextInput style={styles.tempConfig}
-                onChangeText={setDias}
-                keyboardType={'numeric'}
-                maxLength={2}
-                onSubmitEditing={() => inputRef.current.focus()}
-                returnKeyType='next'
-                autoFocus={true}
-              />
-
-              <Text style={{ paddingTop: 19 }}> : </Text>
-
-              <TextInput style={styles.tempConfig}
-                onChangeText={setHoras}
-                keyboardType={'numeric'}
-                maxLength={2}
-                onSubmitEditing={() => inputRef2.current.focus()}
-                returnKeyType='next'
-                ref={inputRef}
-              />
-
-              <Text style={{ paddingTop: 19 }}> : </Text>
-
-              <TextInput style={styles.tempConfig}
-                onChangeText={setMinutos}
-                keyboardType={'decimal-pad'}
-                maxLength={2}
-                onSubmitEditing={() => inputRef3.current.focus()}
-                returnKeyType='next'
-                ref={inputRef2}
-              />
-
-              <Text style={{ paddingTop: 19 }}> : </Text>
-
-              <TextInput style={styles.tempConfig}
-                onChangeText={setSegundos}
-                keyboardType={'numeric'}
-                maxLength={3}
-                ref={inputRef3}
-              />
-
-            </View>
-
-            <View style={styles.infoContainer}>
-              <Text style={styles.infoText}>
-                D
-              </Text>
-
-              <Text style={styles.infoText}>
-                H
-              </Text>
-
-              <Text style={styles.infoText}>
-                M
-              </Text>
-
-              <Text style={styles.infoText}>
-                S
-              </Text>
-
-            </View>
-
-
-            <View style={styles.btnDownContainer}>
-
-              <TouchableOpacity onPress={downDias} style={styles.downConfig}>
-                <FontAwesome name='angle-down' size={25} color='black' />
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={downHoras} style={styles.downConfig}>
-                <FontAwesome name='angle-down' size={25} color='black' />
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={downMinutos} style={styles.downConfig}>
-                <FontAwesome name='angle-down' size={25} color='black' />
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={downSegundos} style={styles.downConfig}>
-                <FontAwesome name='angle-down' size={25} color='black' />
-              </TouchableOpacity>
-
-            </View>
+            <TouchableOpacity onPress={upSegundos}>
+              <FontAwesome name='angle-up' size={25} color='black' />
+            </TouchableOpacity>
 
           </View>
 
-        </KeyboardAvoidingView>
+
+
+          <View style={styles.timerTime}>
+
+            <TextInput style={styles.tempConfig}
+              onChangeText={setDias}
+              keyboardType={'numeric'}
+              maxLength={2}
+              onSubmitEditing={() => inputRef.current.focus()}
+              returnKeyType='next'
+              autoFocus={true}
+            />
+
+            <Text style={{ paddingTop: 19 }}> : </Text>
+
+            <TextInput style={styles.tempConfig}
+              onChangeText={setHoras}
+              keyboardType={'numeric'}
+              maxLength={2}
+              onSubmitEditing={() => inputRef2.current.focus()}
+              returnKeyType='next'
+              ref={inputRef}
+            />
+
+            <Text style={{ paddingTop: 19 }}> : </Text>
+
+            <TextInput style={styles.tempConfig}
+              onChangeText={setMinutos}
+              keyboardType={'decimal-pad'}
+              maxLength={2}
+              onSubmitEditing={() => inputRef3.current.focus()}
+              returnKeyType='next'
+              ref={inputRef2}
+            />
+
+            <Text style={{ paddingTop: 19 }}> : </Text>
+
+            <TextInput style={styles.tempConfig}
+              onChangeText={setSegundos}
+              keyboardType={'numeric'}
+              maxLength={2}
+              ref={inputRef3}
+            />
+
+          </View>
+
+          <View style={styles.infoContainer}>
+            <Text style={styles.infoText}>
+              D
+            </Text>
+
+            <Text style={styles.infoText}>
+              H
+            </Text>
+
+            <Text style={styles.infoText}>
+              M
+            </Text>
+
+            <Text style={styles.infoText}>
+              S
+            </Text>
+
+          </View>
+
+
+          <View style={styles.btnDownContainer}>
+
+            <TouchableOpacity onPress={downDias} style={styles.downConfig}>
+              <FontAwesome name='angle-down' size={25} color='black' />
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={downHoras} style={styles.downConfig}>
+              <FontAwesome name='angle-down' size={25} color='black' />
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={downMinutos} style={styles.downConfig}>
+              <FontAwesome name='angle-down' size={25} color='black' />
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={downSegundos} style={styles.downConfig}>
+              <FontAwesome name='angle-down' size={25} color='black' />
+            </TouchableOpacity>
+
+          </View>
+          </KeyboardAvoidingView>
       </Modalize>
 
       {/* Inicio View Controle do timer */}
@@ -476,11 +474,6 @@ const styles = StyleSheet.create({
   },
 
   timercontainer: {
-    paddingLeft: 90,
-    paddingRight: 90,
-    width: 350,
-    alignSelf: 'center',
-    marginTop: 30
 
   },
 
@@ -544,9 +537,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignContent: 'center',
     justifyContent: 'space-around',
-    paddingBottom: 15,
-    marginBottom: -30,
-    marginTop: -5
   },
   infoContainer: {
     flexDirection: 'row',
@@ -564,11 +554,12 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: 'black'
+    color: 'black',
+    width:110,
+    height:50
   },
   mage: {
-    justifyContent: 'center',
-    flex:1
+
   },
   voltaView: {
     alignItems: 'center'
@@ -594,8 +585,6 @@ const styles = StyleSheet.create({
     color: '#ebebeb'
   },
   btnCleanVoltas: {
-    width: 100,
-    height: 30,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
@@ -606,13 +595,12 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
   viewTimerr: {
-    padding:15,
-    flex:1,
-    alignItems:'center',
-    justifyContent:'center',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   btnModal: {
-    padding:40
+
   }
 
 
