@@ -4,7 +4,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Modalize } from 'react-native-modalize';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-export default function App() {
+export default function Appx() {
 
   const [horas, setHoras] = useState(0)
   const [minutos, setMinutos] = useState(0)
@@ -16,14 +16,10 @@ export default function App() {
   const [btnName, setBtnName] = useState('Iniciar')
   const [btnIcon, setBtnIcon] = useState('play')
 
-  const modalizeRef = useRef(null)
   const inputRef = useRef()
   const inputRef2 = useRef()
   const inputRef3 = useRef()
 
-  function modalOpen() {
-    modalizeRef.current?.open()
-  }
 
   const image = require('./src/img/timer.png')
 
@@ -112,7 +108,8 @@ export default function App() {
       setDias(day += 1)
       setHoras(hr = 0)
     }
-    setMinutos(min += 30)
+    setMinutos(parseInt(min += 30))
+
   }
 
   function upSegundos(hr, min, sec, day) {
@@ -288,163 +285,132 @@ export default function App() {
     <GestureHandlerRootView style={styles.container}>
 
       {/* Inicio view Timer */}
-      <View style={styles.viewTimerr}>
-        <ImageBackground style={styles.mage}
-          source={image}
-          resizeMode='cover'
-        >
-          <TouchableOpacity onPress={modalOpen} style={styles.btnModal}>
-            <Text style={styles.timerText}> {dias < 10 ? '0' + dias : dias} : {horas < 10 ? '0' + horas : horas} : {minutos < 10 ? '0' + minutos : minutos} : {segundos < 10 ? '0' + segundos : segundos} </Text>
+      <ImageBackground style={styles.mage}
+        source={image}
+        resizeMode='cover'
+      >
+        <View style={styles.viewTimer}>
+
+        <View style={styles.btnContainer}>
+
+          <TouchableOpacity onPress={upDias}>
+            <FontAwesome name='angle-up' size={25} color='black' />
           </TouchableOpacity>
-        </ImageBackground>
-      </View>
-      {/* Fim View Timer */}
 
+          <TouchableOpacity onPress={upHoras}>
+            <FontAwesome name='angle-up' size={25} color='black' />
+          </TouchableOpacity>
 
-      <Modalize
-        ref={modalizeRef}
-        keyboardAvoidingBehavior='height'
-        snapPoint={150}
-        >
+          <TouchableOpacity onPress={upMinutos}>
+            <FontAwesome name='angle-up' size={25} color='black' />
+          </TouchableOpacity>
 
-          <KeyboardAvoidingView behavior='padding'>
+          <TouchableOpacity onPress={upSegundos}>
+            <FontAwesome name='angle-up' size={25} color='black' />
+          </TouchableOpacity>
 
-          <View style={styles.btnContainer}>
+        </View>
 
-            <TouchableOpacity onPress={upDias}>
-              <FontAwesome name='angle-up' size={25} color='black' />
-            </TouchableOpacity>
+        <View style={styles.timerTime}>
 
-            <TouchableOpacity onPress={upHoras}>
-              <FontAwesome name='angle-up' size={25} color='black' />
-            </TouchableOpacity>
+          <TextInput style={styles.tempConfig}
+            onChangeText={setDias}
+            keyboardType={'numeric'}
+            maxLength={2}
+            onSubmitEditing={() => inputRef.current.focus()}
+            returnKeyType='next'
+            autoFocus={true}
+          />
 
-            <TouchableOpacity onPress={upMinutos}>
-              <FontAwesome name='angle-up' size={25} color='black' />
-            </TouchableOpacity>
+          <TextInput style={styles.tempConfig}
+            onChangeText={setHoras}
+            keyboardType={'numeric'}
+            maxLength={2}
+            onSubmitEditing={() => inputRef2.current.focus()}
+            returnKeyType='next'
+            ref={inputRef}
+          />
 
-            <TouchableOpacity onPress={upSegundos}>
-              <FontAwesome name='angle-up' size={25} color='black' />
-            </TouchableOpacity>
+          <TextInput style={styles.tempConfig}
+            onChangeText={setMinutos}
+            keyboardType={'decimal-pad'}
+            maxLength={2}
+            onSubmitEditing={() => inputRef3.current.focus()}
+            returnKeyType='next'
+            ref={inputRef2}
+          />
 
-          </View>
+          <TextInput style={styles.tempConfig}
+            onChangeText={setSegundos}
+            keyboardType={'numeric'}
+            maxLength={2}
+            ref={inputRef3}
+          />
 
+        </View>
+        <View style={styles.infoContainer}>
+          <Text style={styles.infoText}>
+            D
+          </Text>
 
+          <Text style={styles.infoText}>
+            H
+          </Text>
 
-          <View style={styles.timerTime}>
+          <Text style={styles.infoText}>
+            M
+          </Text>
 
-            <TextInput style={styles.tempConfig}
-              onChangeText={setDias}
-              keyboardType={'numeric'}
-              maxLength={2}
-              onSubmitEditing={() => inputRef.current.focus()}
-              returnKeyType='next'
-              autoFocus={true}
-            />
+          <Text style={styles.infoText}>
+            S
+          </Text>
 
-            <Text style={{ paddingTop: 19 }}> : </Text>
+        </View>
+        <View style={styles.btnDownContainer}>
 
-            <TextInput style={styles.tempConfig}
-              onChangeText={setHoras}
-              keyboardType={'numeric'}
-              maxLength={2}
-              onSubmitEditing={() => inputRef2.current.focus()}
-              returnKeyType='next'
-              ref={inputRef}
-            />
+          <TouchableOpacity onPress={downDias} style={styles.downConfig}>
+            <FontAwesome name='angle-down' size={25} color='black' />
+          </TouchableOpacity>
 
-            <Text style={{ paddingTop: 19 }}> : </Text>
+          <TouchableOpacity onPress={downHoras} style={styles.downConfig}>
+            <FontAwesome name='angle-down' size={25} color='black' />
+          </TouchableOpacity>
 
-            <TextInput style={styles.tempConfig}
-              onChangeText={setMinutos}
-              keyboardType={'decimal-pad'}
-              maxLength={2}
-              onSubmitEditing={() => inputRef3.current.focus()}
-              returnKeyType='next'
-              ref={inputRef2}
-            />
+          <TouchableOpacity onPress={downMinutos} style={styles.downConfig}>
+            <FontAwesome name='angle-down' size={25} color='black' />
+          </TouchableOpacity>
 
-            <Text style={{ paddingTop: 19 }}> : </Text>
+          <TouchableOpacity onPress={downSegundos} style={styles.downConfig}>
+            <FontAwesome name='angle-down' size={25} color='black' />
+          </TouchableOpacity>
 
-            <TextInput style={styles.tempConfig}
-              onChangeText={setSegundos}
-              keyboardType={'numeric'}
-              maxLength={2}
-              ref={inputRef3}
-            />
-
-          </View>
-
-          <View style={styles.infoContainer}>
-            <Text style={styles.infoText}>
-              D
-            </Text>
-
-            <Text style={styles.infoText}>
-              H
-            </Text>
-
-            <Text style={styles.infoText}>
-              M
-            </Text>
-
-            <Text style={styles.infoText}>
-              S
-            </Text>
-
-          </View>
-
-
-          <View style={styles.btnDownContainer}>
-
-            <TouchableOpacity onPress={downDias} style={styles.downConfig}>
-              <FontAwesome name='angle-down' size={25} color='black' />
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={downHoras} style={styles.downConfig}>
-              <FontAwesome name='angle-down' size={25} color='black' />
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={downMinutos} style={styles.downConfig}>
-              <FontAwesome name='angle-down' size={25} color='black' />
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={downSegundos} style={styles.downConfig}>
-              <FontAwesome name='angle-down' size={25} color='black' />
-            </TouchableOpacity>
-
-          </View>
-          </KeyboardAvoidingView>
-      </Modalize>
-
+        </View>
+        </View>
+      </ImageBackground>
       {/* Inicio View Controle do timer */}
 
-      <View>
-        <View style={styles.btnControl}>
+      <View style={styles.btnControl}>
 
-          <TouchableOpacity style={styles.btnStart} onPress={init}>
-            <FontAwesome name={btnIcon} size={15} color='black' />
-            <Text style={styles.btnText}>{btnName}</Text>
-          </TouchableOpacity>
+        <TouchableOpacity style={styles.btnStart} onPress={init}>
+          <FontAwesome name={btnIcon} size={15} color='black' />
+          <Text style={styles.btnText}>{btnName}</Text>
+        </TouchableOpacity>
 
-          <TouchableOpacity style={styles.btnStop} onPress={stop}>
-            <FontAwesome name='pause' size={15} color='black' />
-            <Text style={styles.btnText}>Parar</Text>
-          </TouchableOpacity>
+        <TouchableOpacity style={styles.btnStop} onPress={stop}>
+          <FontAwesome name='pause' size={15} color='black' />
+          <Text style={styles.btnText}>Parar</Text>
+        </TouchableOpacity>
 
-        </View>
 
-        <View style={styles.btnControl}>
-          <TouchableOpacity style={styles.btnAcellerate} onPress={acelerar}>
-            <FontAwesome name='forward' size={15} color='black' />
-            <Text style={styles.btnText}>Acelerar</Text>
-          </TouchableOpacity>
+        <TouchableOpacity style={styles.btnAcellerate} onPress={acelerar}>
+          <FontAwesome name='forward' size={15} color='black' />
+          <Text style={styles.btnText}>Acelerar</Text>
+        </TouchableOpacity>
 
-          <TouchableOpacity style={styles.btnClear} onPress={limpar}>
-            <FontAwesome name='shower' size={15} color='black' />
-            <Text style={styles.btnText}>Limpar</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity style={styles.btnClear} onPress={limpar}>
+          <FontAwesome name='shower' size={15} color='black' />
+          <Text style={styles.btnText}>Limpar</Text>
+        </TouchableOpacity>
       </View>
       {/* Fim View Controle do timer */}
 
@@ -470,22 +436,16 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#242424',
-  },
-
-  timercontainer: {
-
+    /* backgroundColor: '#242424', */
   },
 
   btnContainer: {
     flexDirection: 'row',
-    alignContent: 'center',
     justifyContent: 'space-around',
   },
 
   btnDownContainer: {
     flexDirection: 'row',
-    alignContent: 'center',
     justifyContent: 'space-around',
     paddingBottom: 1,
   },
@@ -535,14 +495,11 @@ const styles = StyleSheet.create({
 
   timerTime: {
     flexDirection: 'row',
-    alignContent: 'center',
     justifyContent: 'space-around',
   },
   infoContainer: {
     flexDirection: 'row',
-    alignContent: 'center',
-    justifyContent: 'space-around',
-
+    justifyContent: 'space-around'
   },
   infoText: {
     fontSize: 10,
@@ -555,12 +512,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     color: 'black',
-    width:110,
-    height:50
+    width: 60,
+    height: 60,
+    borderWidth: 1
   },
   mage: {
-
+    justifyContent:'center',
   },
+
+    viewTimer:{
+      justifyContent:'center',
+      padding:60
+
+    },
+
   voltaView: {
     alignItems: 'center'
   },
@@ -590,18 +555,5 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: '#ff4d4d',
   },
-  timerText: {
-    color: 'white',
-    fontSize: 30,
-  },
-  viewTimerr: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  btnModal: {
-
-  }
-
 
 });
