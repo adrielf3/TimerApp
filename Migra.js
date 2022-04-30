@@ -1,9 +1,8 @@
 import React, { useState, useRef } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, TextInput, ImageBackground, KeyboardAvoidingView } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, TextInput, ImageBackground, FlatList } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Modalize } from 'react-native-modalize';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { create } from 'react-test-renderer';
 
 export default function App() {
 
@@ -294,12 +293,18 @@ export default function App() {
         let arr = voltas
 
         arr.push(itens)
-
-        console.log(voltas)
     }
 
     function clenVoltas() {
-        setVoltas('')
+        setVoltas([])
+    }
+
+    function Volts({di, hr, min, sec}){
+        return(
+            <View style={styles.voltasListView}>
+                <Text style={styles.voltasListInfo}>{di} : {hr} : {min} : {sec}</Text>
+            </View>
+        )
     }
 
     return (
@@ -456,9 +461,23 @@ export default function App() {
             </View>
             {/* Fim View Controle do timer */}
 
-            <TouchableOpacity onPress={() => marcarVolta()} style={styles.btnVoltas}>
+        <View style={styles.voltasControl}>
+        <TouchableOpacity onPress={() => marcarVolta()} style={styles.btnVoltas}>
             <Text style={styles.voltaText}>Marcar Tempo</Text>
           </TouchableOpacity>
+
+          <TouchableOpacity onPress={clenVoltas} style={styles.btnCleanVoltas}>
+            <Text style={styles.voltaText}>Limpar Tempo</Text>
+          </TouchableOpacity>
+        </View>
+
+
+
+          <FlatList 
+          data={voltas}
+          renderItem={({ item }) => <Volts di={item.d} hr={item.h} min={item.m} sec={item.s} />}
+          />
+
 
         </GestureHandlerRootView>
     )
