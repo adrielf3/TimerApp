@@ -3,8 +3,25 @@ import { Text, View, StyleSheet, TouchableOpacity, TextInput, ImageBackground, F
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Modalize } from 'react-native-modalize';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import MSSQL from 'react-native-mssql';
 
 export default function App() {
+
+
+    const config = {
+        server: 'RGSV1001.regra.local.br',
+        username: 'oliveira',
+        password: '#ED4rf%TG',
+        database: 'BANCO_PAINEL',
+
+    }
+    async function connected (){
+       const cone = await MSSQL.connect(config);
+       const query = 'SELECT* FROM tbl_usuarios'
+       const result = await MSSQL.executeQuery(query);
+        console.log(cone, result)
+    } 
+
 
     const [horas, setHoras] = useState(0)
     const [minutos, setMinutos] = useState(0)
@@ -15,6 +32,10 @@ export default function App() {
     const [voltas, setVoltas] = useState([])
     const [btnName, setBtnName] = useState('Iniciar')
     const [btnIcon, setBtnIcon] = useState('play')
+    const [pos, setPos] = useState(1)
+    const [btnControlOff, setBtnControlOff] = useState(false)
+    const [btnStart, setBtnStart] = useState(false)
+    const [btnStart2x, setBtnStart2x] = useState(false)
 
     const modalizeRef = useRef(null)
     const inputRef = useRef()
@@ -29,6 +50,7 @@ export default function App() {
 
     function iniciar(hr, min, sec, day) {
 
+
         hr = horas
         min = minutos
         sec = segundos
@@ -36,10 +58,9 @@ export default function App() {
 
 
         let timer = setInterval(function () {
-
             if (sec > 0) {
                 setSegundos(sec -= 1)
-            } else if (min > 0) {
+            }else if (min > 0) {
                 setSegundos(sec = + 60)
                 setMinutos(min -= 1)
             } else if (hr > 0) {
@@ -49,7 +70,6 @@ export default function App() {
                 setHoras(hr += 24)
                 setDias(day -= 1)
             }
-
         }, 1000)
 
         setInterva(timer)
@@ -64,7 +84,6 @@ export default function App() {
         sec = segundos
         day = dias
 
-
         let timer2x = setInterval(function () {
 
             if (sec > 0) {
@@ -78,13 +97,44 @@ export default function App() {
             } else if (day > 0) {
                 setHoras(hr += 24)
                 setDias(day -= 1)
+            } else if (day == 0){
+                setBtnControlOff(false)
+                setBtnIcon('play')
+                setBtnName('Iniciar')
             }
-
-        }, 100)
-
+        }, 300)
         setInterva2(timer2x)
         clearInterval(interva)
 
+    }
+
+    function corrigeValores(sec, min, hr, day){
+        sec = segundos
+        min = minutos
+        day = dias
+        hr = horas
+
+        if(sec > 60){
+            setSegundos((parseInt(sec)) - 60)
+            setMinutos((parseInt(min)) + 1)
+        }
+        if (min > 60){
+            setMinutos((parseInt(min)) - 60)
+            setHoras(hr += 1)
+        }
+        if(hr > 24){
+            setHoras(hr - 24)
+            setDias((parseInt(day)) + 1)
+        }else if(hr > 48){
+            setHoras(hr - 48)
+            setDias((parseInt(day)) + 2)
+        }else if(hr > 72){
+            setHoras(hr - 72)
+            setDias((parseInt(day)) + 3)
+        }else if(hr > 96){
+            setHoras(hr - 96)
+            setDias((parseInt(day)) + 4)
+        }
     }
 
 
@@ -122,28 +172,23 @@ export default function App() {
         hr = horas
         min = minutos
         sec = segundos
-
+    
         if (sec == 60) {
-            setMinutos(min += 1)
-            setSegundos(sec = 0)
+          setMinutos(min += 1)
+          setSegundos(sec = 0)
         } else if (min == 60) {
-            setHoras(hr += 1)
-            setMinutos(min = 0)
+          setHoras(hr += 1)
+          setMinutos(min = 0)
         } else if (hr == 24) {
-            setDias(day += 1)
-            setHoras(hr = 0)
-            setMinutos(min = 0)
-            setSegundos(sec = 0)
-        } else if (segundos > 60) {
-            alert('Verifique os valores digitados, e digite novamente:: Max Horas: 24, Max Minutos: 60, Max Segundos: 60')
-            clearInterval(interva2)
-            setDias(0)
-            setHoras(0)
-            setMinutos(0)
-            setSegundos(sec = 0)
+          setDias(day += 1)
+          setHoras(hr = 0)
+          setMinutos(min = 0)
+          setSegundos(sec = 0)
         }
+    
+        setSegundos(sec += 1)
 
-        setSegundos((parseInt(sec)) + 1)
+        
     }
 
     function upDias(day) {
@@ -209,8 +254,13 @@ export default function App() {
     }
 
     const limpar = () => {
+        setBtnIcon('play')
+        setBtnName('Iniciar')
         clearInterval(interva)
         clearInterval(interva2)
+        setBtnControlOff(false)
+        setBtnStart2x(false)
+        setBtnStart(false)
         setSegundos(0)
         setMinutos(0)
         setHoras(0)
@@ -222,69 +272,36 @@ export default function App() {
         setBtnName('Iniciar')
         clearInterval(interva)
         clearInterval(interva2)
+        setBtnControlOff(false)
+        setBtnStart2x(false)
+        setBtnStart(false)
     }
 
     function init() {
-        if (segundos > 60) {
-            alert('Verifique os valores digitados, e digite novamente:: Max Horas: 24, Max Minutos: 60, Max Segundos: 60')
-            clearInterval(interva)
-            setDias(0)
-            setHoras(0)
-            setMinutos(0)
-            setSegundos(0)
-        } else if (minutos > 60) {
-            alert('Verifique os valores digitados, e digite novamente:: Max Horas: 24, Max Minutos: 60, Max Segundos: 60')
-            clearInterval(interva)
-            setDias(0)
-            setHoras(0)
-            setMinutos(0)
-            setSegundos(0)
-        } else if (horas > 24) {
-            alert('Verifique os valores digitados, e digite novamente: Max Horas: 24, Max Minutos: 60, Max Segundos: 60')
-            clearInterval(interva)
-            setDias(0)
-            setHoras(0)
-            setMinutos(0)
-            setSegundos(0)
-        } else {
             iniciar()
             clearInterval(interva2)
-        }
-
+            setBtnControlOff(true)
+            setBtnStart(true)
+            setBtnStart2x(false)
     }
 
     function acelerar() {
-        if (segundos > 60) {
-            alert('Verifique os valores digitados, e digite novamente:: Max Horas: 24, Max Minutos: 60, Max Segundos: 60')
-            clearInterval(interva2)
-            setDias(0)
-            setHoras(0)
-            setMinutos(0)
-            setSegundos(0)
-        } if (minutos > 60) {
-            alert('Verifique os valores digitados, e digite novamente:: Max Horas: 24, Max Minutos: 60, Max Segundos: 60')
-            clearInterval(interva2)
-            setDias(0)
-            setHoras(0)
-            setMinutos(0)
-            setSegundos(0)
-        } else if (horas > 24) {
-            alert('Verifique os valores digitados, e digite novamente:: Max Horas: 24, Max Minutos: 60, Max Segundos: 60')
-            clearInterval(interva2)
-            setDias(0)
-            setHoras(0)
-            setMinutos(0)
-            setSegundos(0)
-        } else {
             iniciar2x()
             clearInterval(interva)
             setBtnName('Vel. Normal')
             setBtnIcon('backward')
+            setBtnControlOff(true)
+            setBtnStart2x(true)
+            setBtnStart(false)
         }
-    }
 
     function marcarVolta() {
+        
+        var more = pos
+        setPos(more +=1)
+        
         let itens = {
+            p: pos,
             d: dias,
             h: horas,
             m: minutos,
@@ -293,16 +310,19 @@ export default function App() {
         let arr = voltas
 
         arr.push(itens)
+
+
     }
 
     function clenVoltas() {
+        setPos(1)
         setVoltas([])
     }
 
-    function Volts({di, hr, min, sec}){
-        return(
+    function Volts({ di, hr, min, sec, po }) {
+        return (
             <View style={styles.voltasListView}>
-                <Text style={styles.voltasListInfo}>{di} : {hr} : {min} : {sec}</Text>
+                <Text style={styles.voltasListInfo}>{po + 'º'} - {di < 10 ? '0' + di : di} : {hr < 10 ? '0' + hr : hr} : {min < 10 ? '0' + min : min} : {sec < 10 ? '0' + sec : sec}</Text>
             </View>
         )
     }
@@ -318,26 +338,26 @@ export default function App() {
 
                         <View style={styles.btnContainer}>
 
-                            <TouchableOpacity onPress={upDias}>
-                                <FontAwesome name='angle-up' size={25} color='black' />
+                            <TouchableOpacity onPress={upDias} disabled={btnControlOff} >
+                                <FontAwesome name='angle-up' size={35} color='white' />
                             </TouchableOpacity>
 
-                            <TouchableOpacity onPress={upHoras}>
-                                <FontAwesome name='angle-up' size={25} color='black' />
+                            <TouchableOpacity onPress={upHoras} disabled={btnControlOff}>
+                                <FontAwesome name='angle-up' size={35} color='white' />
                             </TouchableOpacity>
 
-                            <TouchableOpacity onPress={upMinutos}>
-                                <FontAwesome name='angle-up' size={25} color='black' />
+                            <TouchableOpacity onPress={upMinutos} disabled={btnControlOff}>
+                                <FontAwesome name='angle-up' size={35} color='white' />
                             </TouchableOpacity>
 
-                            <TouchableOpacity onPress={upSegundos}>
-                                <FontAwesome name='angle-up' size={25} color='black' />
+                            <TouchableOpacity onPress={upSegundos} disabled={btnControlOff}>
+                                <FontAwesome name='angle-up' size={35} color='white' />
                             </TouchableOpacity>
 
                         </View>
 
                         <View>
-                            <TouchableOpacity onPress={modalOpen}>
+                            <TouchableOpacity onPress={modalOpen} disabled={btnControlOff}>
                                 <Text style={styles.timerText}> {dias < 10 ? '0' + dias : dias} : {horas < 10 ? '0' + horas : horas} : {minutos < 10 ? '0' + minutos : minutos} : {segundos < 10 ? '0' + segundos : segundos} </Text>
                             </TouchableOpacity>
                         </View>
@@ -362,20 +382,20 @@ export default function App() {
                         </View>
                         <View style={styles.btnDownContainer}>
 
-                            <TouchableOpacity onPress={downDias} style={styles.downConfig}>
-                                <FontAwesome name='angle-down' size={25} color='black' />
+                            <TouchableOpacity onPress={downDias} style={styles.downConfig} disabled={btnControlOff}>
+                                <FontAwesome name='angle-down' size={35} color='white' />
                             </TouchableOpacity>
 
-                            <TouchableOpacity onPress={downHoras} style={styles.downConfig}>
-                                <FontAwesome name='angle-down' size={25} color='black' />
+                            <TouchableOpacity onPress={downHoras} style={styles.downConfig} disabled={btnControlOff}>
+                                <FontAwesome name='angle-down' size={35} color='white' />
                             </TouchableOpacity>
 
-                            <TouchableOpacity onPress={downMinutos} style={styles.downConfig}>
-                                <FontAwesome name='angle-down' size={25} color='black' />
+                            <TouchableOpacity onPress={downMinutos} style={styles.downConfig} disabled={btnControlOff}>
+                                <FontAwesome name='angle-down' size={35} color='white' />
                             </TouchableOpacity>
 
-                            <TouchableOpacity onPress={downSegundos} style={styles.downConfig}>
-                                <FontAwesome name='angle-down' size={25} color='black' />
+                            <TouchableOpacity onPress={downSegundos} style={styles.downConfig}disabled={btnControlOff}>
+                                <FontAwesome name='angle-down' size={35} color='white' />
                             </TouchableOpacity>
 
                         </View>
@@ -385,7 +405,8 @@ export default function App() {
             <Modalize
                 ref={modalizeRef}
                 keyboardAvoidingBehavior={'height'}
-                snapPoint={150}
+                snapPoint={100}
+                onClosed={corrigeValores}
             >
                 <View style={styles.timerTime}>
 
@@ -397,6 +418,7 @@ export default function App() {
                         returnKeyType='next'
                         autoFocus={true}
                         placeholder={'DIA'}
+                        placeholderTextColor={'#424242'}
                     />
                     <Text style={{ paddingTop: 19 }}>:</Text>
 
@@ -408,6 +430,7 @@ export default function App() {
                         returnKeyType='next'
                         ref={inputRef}
                         placeholder={'HR'}
+                        placeholderTextColor={'#424242'}
                     />
 
                     <Text style={{ paddingTop: 19 }}>:</Text>
@@ -420,6 +443,7 @@ export default function App() {
                         returnKeyType='next'
                         ref={inputRef2}
                         placeholder={'MIN'}
+                        placeholderTextColor={'#424242'}
                     />
 
                     <Text style={{ paddingTop: 19 }}>:</Text>
@@ -430,13 +454,14 @@ export default function App() {
                         maxLength={2}
                         ref={inputRef3}
                         placeholder={'SEC'}
+                        placeholderTextColor={'#424242'}
                     />
 
                 </View>
             </Modalize>
 
             <View style={styles.btnControlContente}>
-                <TouchableOpacity style={styles.btnStart} onPress={init}>
+                <TouchableOpacity style={styles.btnStart} onPress={connected} disabled={btnStart}>
                     <FontAwesome name={btnIcon} size={15} color='black' />
                     <Text style={styles.btnText}>{btnName}</Text>
                 </TouchableOpacity>
@@ -449,7 +474,7 @@ export default function App() {
             </View>
 
             <View style={styles.btnControlContent}>
-                <TouchableOpacity style={styles.btnAcellerate} onPress={acelerar}>
+                <TouchableOpacity style={styles.btnAcellerate} onPress={acelerar}  disabled={btnStart2x}>
                     <FontAwesome name='forward' size={15} color='black' />
                     <Text style={styles.btnText}>Acelerar</Text>
                 </TouchableOpacity>
@@ -461,22 +486,25 @@ export default function App() {
             </View>
             {/* Fim View Controle do timer */}
 
-        <View style={styles.voltasControl}>
-        <TouchableOpacity onPress={() => marcarVolta()} style={styles.btnVoltas}>
-            <Text style={styles.voltaText}>Marcar Tempo</Text>
-          </TouchableOpacity>
+            <View style={styles.voltasControl}>
+                <TouchableOpacity onPress={() => marcarVolta()} style={styles.btnVoltas}>
+                    <Text style={styles.voltaText}>Marcar Tempo</Text>
+                </TouchableOpacity>
 
-          <TouchableOpacity onPress={clenVoltas} style={styles.btnCleanVoltas}>
-            <Text style={styles.voltaText}>Limpar Tempo</Text>
-          </TouchableOpacity>
-        </View>
-
+                <TouchableOpacity onPress={clenVoltas} style={styles.btnCleanVoltas}>
+                    <Text style={styles.voltaText}>Limpar Voltas</Text>
+                </TouchableOpacity>
 
 
-          <FlatList 
-          data={voltas}
-          renderItem={({ item }) => <Volts di={item.d} hr={item.h} min={item.m} sec={item.s} />}
-          />
+            </View>
+
+
+            <FlatList
+                data={voltas}
+                renderItem={({ item }) => <Volts di={item.d} hr={item.h} min={item.m} sec={item.s} po={item.p} />}
+            />
+
+
 
 
         </GestureHandlerRootView>
@@ -486,6 +514,7 @@ export default function App() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#424242'
     },
     viewIMG: {
         alignItems: 'center',
@@ -511,7 +540,7 @@ const styles = StyleSheet.create({
     timerTime: {
         flexDirection: 'row',
         justifyContent: 'space-evenly',
-        paddingTop: 25
+        paddingTop: 25,
     },
     timerContainer: {
         alignItems: 'center',
@@ -525,41 +554,45 @@ const styles = StyleSheet.create({
     btnControlContent: {
         flexDirection: 'row',
         justifyContent: 'space-evenly',
-        paddingTop: 10
+        paddingTop: 10,
+        paddingBottom:15
     },
     btnStart: {
-        width: 70,
+        borderRadius: 5,
         height: 50,
-        borderWidth: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 10,
+        width: 70,
+        backgroundColor: '#72ed93'
 
     },
     btnStop: {
-        width: 70,
+        borderRadius: 5,
         height: 50,
-        borderWidth: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 10,
+        width: 70,
+        backgroundColor: '#ff4747'
 
     },
     btnAcellerate: {
-        width: 70,
+        borderRadius: 5,
         height: 50,
-        borderWidth: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 10,
+        width: 70,
+        backgroundColor: '#7dff8e'
     },
     btnClear: {
-        width: 70,
+        borderRadius: 5,
         height: 50,
-        borderWidth: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 10,
+        width: 70,
+        backgroundColor: '#757575'
+    },
+    btnText: {
+        color: 'black'
     },
     tempConfig: {
         borderRadius: 10,
@@ -568,10 +601,52 @@ const styles = StyleSheet.create({
         fontSize: 25,
         textAlign: 'center',
         fontWeight: 'bold',
+        color: 'black'
     },
-    timerText:{
-        fontSize:25,
-        fontWeight:'bold',
-        color:'black'
-    }
+    timerText: {
+        fontSize: 25,
+        fontWeight: 'bold',
+        color: 'white'
+    },
+    voltasControl: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        paddingTop: 30,
+        borderTopWidth:1,
+        height:100,
+        margin:10,
+        borderRadius:10
+    },
+    btnVoltas: {
+        backgroundColor: 'black',
+        height: 35,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 90,
+        borderRadius:10
+    },
+    btnCleanVoltas: {
+        backgroundColor: 'black',
+        height: 35,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 80,
+        borderRadius:10
+    },
+    voltaText:{
+        color:'white'
+    },
+    voltasListView:{
+        alignItems:'center',
+        justifyContent:'center',
+        borderBottomWidth:1,
+        marginLeft:50,
+        marginRight:50,
+        marginBottom:15
+    },
+    voltasListInfo:{
+        fontSize:30,
+        color:'white',
+        paddingTop:10
+    },
 })
